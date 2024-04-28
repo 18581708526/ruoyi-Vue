@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.needdo.mapper.RyNeeddoMapper">
+    
+    <resultMap type="RyNeeddo" id="RyNeeddoResult">
+        <result property="id"    column="id"    />
+        <result property="workCode"    column="work_code"    />
+        <result property="workName"    column="work_name"    />
+        <result property="creater"    column="creater"    />
+        <result property="targetUser"    column="target_user"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="status"    column="status"    />
+        <result property="targetUsername"    column="target_username"    />
+    </resultMap>
+
+    <sql id="selectRyNeeddoVo">
+        select id, work_code, work_name, creater, target_user, create_time, update_time, status, target_username from ry_needdo
+    </sql>
+
+    <select id="selectRyNeeddoList" parameterType="RyNeeddo" resultMap="RyNeeddoResult">
+        <include refid="selectRyNeeddoVo"/>
+        <where>  
+            <if test="workCode != null  and workCode != ''"> and work_code = #{workCode}</if>
+            <if test="workName != null  and workName != ''"> and work_name like concat('%', #{workName}, '%')</if>
+            <if test="creater != null "> and creater = #{creater}</if>
+            <if test="targetUser != null "> and target_user = #{targetUser}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="targetUsername != null  and targetUsername != ''"> and target_username like concat('%', #{targetUsername}, '%')</if>
+
+        </where>
+    </select>
+    
+    <select id="selectRyNeeddoById" parameterType="Long" resultMap="RyNeeddoResult">
+        <include refid="selectRyNeeddoVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertRyNeeddo" parameterType="RyNeeddo" useGeneratedKeys="true" keyProperty="id">
+        insert into ry_needdo
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="workCode != null">work_code,</if>
+            <if test="workName != null">work_name,</if>
+            <if test="creater != null">creater,</if>
+            <if test="targetUser != null">target_user,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="status != null">status,</if>
+            <if test="targetUsername != null">target_username,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="workCode != null">#{workCode},</if>
+            <if test="workName != null">#{workName},</if>
+            <if test="creater != null">#{creater},</if>
+            <if test="targetUser != null">#{targetUser},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="status != null">#{status},</if>
+            <if test="targetUsername != null">#{targetUsername},</if>
+         </trim>
+    </insert>
+
+    <update id="updateRyNeeddo" parameterType="RyNeeddo">
+        update ry_needdo
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="workCode != null">work_code = #{workCode},</if>
+            <if test="workName != null">work_name = #{workName},</if>
+            <if test="creater != null">creater = #{creater},</if>
+            <if test="targetUser != null">target_user = #{targetUser},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="targetUsername != null">target_username = #{targetUsername},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteRyNeeddoById" parameterType="Long">
+        delete from ry_needdo where id = #{id}
+    </delete>
+
+    <delete id="deleteRyNeeddoByIds" parameterType="String">
+        delete from ry_needdo where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
